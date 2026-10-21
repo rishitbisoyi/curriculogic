@@ -1,0 +1,497 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Design tokens ───────────────────────────────────────── */
+:root {
+    --navy: #0b1f3a;
+    --navy-700: #16315a;
+    --teal: #0b7f71;
+    --teal-700: #096a5f;
+    --teal-tint: #e6f5f2;
+    --blue-tint: #e8eefb;
+    --amber: #92400e;
+    --amber-tint: #fdf3e3;
+    --bg-soft: #f6f8fb;
+    --surface: #ffffff;
+    --text: #0b1f3a;
+    --muted: #52627a;
+    --border: #dde3ec;
+    --border-strong: #c3ccd9;
+
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2rem;
+
+    --r-sm: 6px;
+    --r: 10px;
+    --shadow-sm: 0 1px 2px rgba(11, 31, 58, 0.06);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+html,
+body,
+.stApp,
+[data-testid="stAppViewContainer"] {
+    font-family: var(--font);
+    color: var(--text);
+}
+
+.block-container {
+    max-width: 1180px;
+    padding: var(--sp-6) var(--sp-6) 4rem;
+}
+
+[data-testid="stHeader"] {
+    background: transparent;
+}
+
+/* Keyboard focus */
+button:focus-visible,
+input:focus-visible,
+[role="radiogroup"] label:has(input:focus-visible),
+[data-baseweb="select"]:focus-within {
+    outline: 2px solid var(--teal) !important;
+    outline-offset: 2px;
+}
+
+/* ── Page header ─────────────────────────────────────────── */
+.cl-header {
+    margin-bottom: var(--sp-5);
+}
+
+.cl-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+}
+
+.cl-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: var(--sp-1) 0 var(--sp-2);
+    padding: 0;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+}
+
+.cl-subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.98rem;
+    max-width: 46rem;
+    line-height: 1.55;
+}
+
+.cl-section {
+    margin: var(--sp-5) 0 var(--sp-3);
+}
+
+.cl-section h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    color: var(--navy);
+}
+
+.cl-section p {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+    background: var(--navy);
+    border-right: 0;
+}
+
+.cl-brand {
+    padding: var(--sp-3) var(--sp-2) var(--sp-4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: var(--sp-4);
+}
+
+.cl-wordmark {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+}
+
+.cl-wordmark span {
+    color: #5eead4;
+}
+
+.cl-brand-sub {
+    color: #94a3b8;
+    font-size: 0.78rem;
+    margin-top: 2px;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] {
+    gap: 2px;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label {
+    width: 100%;
+    margin: 0;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--r-sm);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label>div:first-child {
+    display: none;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label p {
+    color: #cbd5e1;
+    font-size: 0.92rem;
+    margin: 0;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+    background: rgba(94, 234, 212, 0.14);
+    border-left-color: #5eead4;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.cl-sidebar-foot {
+    margin-top: var(--sp-6);
+    padding: var(--sp-3) var(--sp-2) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: #94a3b8;
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
+.cl-sidebar-foot strong {
+    color: #e2e8f0;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.stButton>button,
+.stFormSubmitButton>button {
+    border-radius: var(--r-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-height: 2.5rem;
+    padding: 0.45rem 1rem;
+    box-shadow: none;
+    background: var(--surface);
+    color: var(--navy);
+    border: 1px solid var(--border-strong);
+}
+
+.stButton>button p,
+.stFormSubmitButton>button p {
+    color: inherit;
+}
+
+.stButton>button:hover,
+.stFormSubmitButton>button:hover {
+    border-color: var(--teal);
+    color: var(--teal-700);
+}
+
+.stButton>button[kind="primary"],
+.stFormSubmitButton>button[kind="primary"],
+.stButton>[data-testid="stBaseButton-primary"],
+.stFormSubmitButton>[data-testid="stBaseButton-primary"] {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #ffffff;
+}
+
+.stButton>button[kind="primary"]:hover,
+.stFormSubmitButton>button[kind="primary"]:hover,
+.stButton>[data-testid="stBaseButton-primary"]:hover,
+.stFormSubmitButton>[data-testid="stBaseButton-primary"]:hover {
+    background: var(--teal-700);
+    border-color: var(--teal-700);
+    color: #ffffff;
+}
+
+/* ── Inputs ──────────────────────────────────────────────── */
+[data-baseweb="input"],
+[data-baseweb="select"]>div,
+[data-baseweb="textarea"] {
+    border-radius: var(--r-sm);
+}
+
+/* ── Containers & metrics ────────────────────────────────── */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border-color: var(--border);
+    border-radius: var(--r);
+}
+
+[data-testid="stMetric"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: var(--sp-3) var(--sp-4);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-testid="stMetricLabel"] p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+[data-testid="stMetricValue"] {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+/* ── Course cards ────────────────────────────────────────── */
+.cl-course {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: var(--sp-3) var(--sp-4);
+    margin-bottom: var(--sp-2);
+}
+
+.cl-course-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-2);
+}
+
+.cl-code {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--navy);
+}
+
+.cl-course-name {
+    font-size: 0.88rem;
+    color: var(--text);
+    margin-top: 2px;
+}
+
+.cl-course-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.cl-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cl-badge--completed {
+    background: var(--teal-tint);
+    color: var(--teal-700);
+}
+
+.cl-badge--eligible {
+    background: var(--blue-tint);
+    color: var(--navy-700);
+}
+
+.cl-badge--blocked {
+    background: var(--amber-tint);
+    color: var(--amber);
+}
+
+.cl-colhead {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.cl-count {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* ── Tables ──────────────────────────────────────────────── */
+.cl-table-wrap {
+    overflow-x: auto;
+    margin: var(--sp-2) 0;
+}
+
+.cl-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.cl-table th {
+    text-align: left;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border-strong);
+    background: var(--bg-soft);
+}
+
+.cl-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.cl-table tfoot td {
+    font-weight: 600;
+    border-bottom: 0;
+    background: var(--bg-soft);
+}
+
+/* ── Utilisation bar ─────────────────────────────────────── */
+.cl-bar {
+    background: #e8edf3;
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    margin: var(--sp-2) 0 var(--sp-3);
+}
+
+.cl-bar-fill {
+    background: var(--teal);
+    height: 100%;
+    border-radius: 999px;
+}
+
+.cl-sem-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-3);
+}
+
+.cl-sem-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--navy);
+}
+
+.cl-sem-credits {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+/* ── Legend / empty state / misc ─────────────────────────── */
+.cl-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin: var(--sp-2) 0 var(--sp-3);
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.cl-legend i {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: -1px;
+    border: 1px solid var(--border-strong);
+}
+
+.cl-empty {
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r);
+    padding: var(--sp-5);
+    text-align: center;
+    background: var(--bg-soft);
+}
+
+.cl-empty strong {
+    display: block;
+    color: var(--navy);
+    margin-bottom: 2px;
+}
+
+.cl-empty span {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.cl-note {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.cl-prose p,
+.cl-prose li {
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 0.95rem;
+}
+
+.cl-prose h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: var(--sp-5) 0 var(--sp-2);
+}
+
+/* Tabs */
+[data-baseweb="tab-list"] {
+    gap: var(--sp-2);
+}
+
+[data-baseweb="tab"] {
+    font-weight: 500;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .block-container {
+        padding: var(--sp-4) var(--sp-4) 3rem;
+    }
+
+    .cl-title {
+        font-size: 1.4rem;
+    }
+
+    .cl-table {
+        font-size: 0.82rem;
+    }
+
+    .cl-table th,
+    .cl-table td {
+        padding: 0.45rem 0.55rem;
+    }
+
+    .cl-sem-head {
+        flex-direction: column;
+        gap: 2px;
+    }
+}
