@@ -11,22 +11,34 @@ Built for **BAMAT205 — Discrete Mathematics and Linear Algebra**.
 
 ## Quick Start
 
-### Prerequisites
+### 1. Modern Web Application (React 19 + TypeScript + FastAPI) — *Recommended*
 
-- **Python 3.10+** (tested with 3.11 / 3.13)
-- pip
-
-### Install dependencies
+The modern frontend provides a premium academic SaaS interface with interactive topological graph exploration, instant real-time filtering, modal editors, and discrete math simulation labs.
 
 ```bash
-cd curriculogic
+# 1. Install backend & frontend dependencies
 pip install -r requirements.txt
+cd frontend && npm install && cd ..
+
+# 2. Start the FastAPI backend service
+python3 -m uvicorn server:app --host 0.0.0.0 --port 8000
+
+# 3. In another terminal, start the Vite dev server
+cd frontend
+npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-### Run locally
+Open **http://localhost:5173** in your browser.
+
+---
+
+### 2. Classic Streamlit Dashboard
+
+The legacy single-script Streamlit application is fully preserved and runs alongside:
 
 ```bash
-streamlit run app.py
+pip install -r requirements.txt
+streamlit run app.py --server.port 8501
 ```
 
 Open **http://localhost:8501** in your browser.
@@ -120,28 +132,29 @@ Your app will be available at a public HTTPS URL like:
 curriculogic/
 ├── .streamlit/
 │   └── config.toml          # Streamlit theme & server config
-├── app.py                    # Main Streamlit application (entry point)
-├── logic.py                  # Dashboard metrics calculation
-├── graph_engine.py           # NetworkX graph building, cycle detection, drawing
-├── planner.py                # Greedy semester planner with topological sort
-├── counting.py               # Pigeonhole feasibility & combinations
-├── sample_data.py            # Sample course data & JSON persistence
-├── style.css                 # Custom CSS for modern UI
-├── requirements.txt          # Python dependencies
-├── __init__.py               # Package init
+├── app.py                   # Main Streamlit application (entry point & page router)
+├── ui.py                    # Accessible UI component library & CSS injection
+├── logic.py                 # Propositional logic & dashboard metrics calculation
+├── graph_engine.py          # NetworkX DAG building, Hasse reduction, cycle detection, drawing
+├── planner.py               # Greedy credit-constrained semester planner with topological sort
+├── counting.py              # Combinations, permutations, & pigeonhole feasibility checks
+├── sample_data.py           # Sample course data & JSON persistence
+├── style.css                # Navy & teal design system stylesheet
+├── courses.json             # Persistent course storage
+├── requirements.txt         # Python dependencies
+├── __init__.py              # Package init
 └── tests/
     ├── __init__.py
-    └── test_logic.py         # Unit tests
+    ├── test_logic.py        # Logic metrics tests
+    └── test_curriculogic.py # Comprehensive functional and integration tests
 ```
 
 ## Running Tests
 
-```bash
-# From within the repository root:
-python -m pytest tests/ -v
+Run the full automated test suite directly using `pytest`:
 
-# Or from the parent directory:
-python -m pytest curriculogic/tests/ -v
+```bash
+pytest -v
 ```
 
 ---

@@ -2,11 +2,11 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from typing import List, Dict, Set, Tuple, Optional
 
-COLOR_COMPLETED = "#0b7f71"
-COLOR_ELIGIBLE = "#16315a"
-COLOR_BLOCKED = "#e2e8f0"
+COLOR_COMPLETED = "#15803d"  # green
+COLOR_ELIGIBLE = "#0F9690"   # teal accent
+COLOR_BLOCKED = "#E2E8F0"    # soft neutral border color
 TEXT_ON_DARK = "#ffffff"
-TEXT_ON_LIGHT = "#0b1f3a"
+TEXT_ON_LIGHT = "#172033"
 
 
 def build_graph(courses: List[Dict]) -> nx.DiGraph:
@@ -104,39 +104,43 @@ def make_figure(G: nx.DiGraph, completed: Set[str], eligible: List[Dict],
     n_layers = int(max(x for x, _ in pos.values())) + 1 if pos else 1
     max_rows = max(1, len({round(y, 3) for _, y in pos.values()}))
     if compact:
-        figsize = (max(5.5, 1.5 * n_layers), max(3.2, 0.7 * max_rows + 1))
+        figsize = (max(6.0, 1.8 * n_layers), max(3.5, 0.8 * max_rows + 1.2))
     else:
-        figsize = (max(8, 2.1 * n_layers), max(4.2, 1.0 * max_rows + 1.5))
+        figsize = (max(9.0, 2.4 * n_layers), max(4.8, 1.1 * max_rows + 1.6))
 
-    fig, ax = plt.subplots(figsize=figsize)
-    maxlen = max(len(str(n)) for n in G.nodes())
-    base = 650 if compact else 1150
-    node_size = base + 130 * max(0, maxlen - 3)
+    fig, ax = plt.subplots(figsize=figsize, dpi=130)
+    maxlen = max(len(str(n)) for n in G.nodes()) if G.nodes() else 3
+    base = 800 if compact else 1400
+    node_size = base + 150 * max(0, maxlen - 3)
 
     nx.draw_networkx_edges(
-        H, pos, ax=ax, arrows=True, arrowstyle='-|>', arrowsize=12 if compact else 16,
-        edge_color='#8a99ad', width=1.1, node_size=node_size,
-        connectionstyle='arc3,rad=0.08',
+        H, pos, ax=ax, arrows=True, arrowstyle='-|>', arrowsize=14 if compact else 18,
+        edge_color='#94a3b8', width=1.4, node_size=node_size,
+        connectionstyle='arc3,rad=0.06',
     )
     face = []
+    edgecolors = []
     for node in G.nodes():
         if node in completed:
             face.append(COLOR_COMPLETED)
+            edgecolors.append('#15803d')
         elif node in elig_codes:
             face.append(COLOR_ELIGIBLE)
+            edgecolors.append('#0F9690')
         else:
             face.append(COLOR_BLOCKED)
+            edgecolors.append('#94a3b8')
     nx.draw_networkx_nodes(G, pos, ax=ax, node_color=face, node_size=node_size,
-                           edgecolors='#0b1f3a', linewidths=0.9)
+                           edgecolors=edgecolors, linewidths=1.5)
     for node, color in zip(G.nodes(), face):
         x, y = pos[node]
         ax.text(x, y, str(node), ha='center', va='center',
-                fontsize=7.5 if compact else 10, fontweight='bold',
+                fontsize=8.5 if compact else 10.5, fontweight='bold',
                 color=TEXT_ON_LIGHT if color == COLOR_BLOCKED else TEXT_ON_DARK)
     ax.axis('off')
-    ax.margins(0.12)
-    fig.patch.set_facecolor('white')
-    fig.tight_layout(pad=0.4)
+    ax.margins(0.15)
+    fig.patch.set_facecolor('#ffffff')
+    fig.tight_layout(pad=0.5)
     return fig
 
 

@@ -19,8 +19,21 @@ def topological_sort(courses: List[Dict]) -> List[str]:
         raise ValueError('Circular prerequisite detected')
 
 
-def plan_semesters_detailed(courses: List[Dict], completed: Set[str], max_credits: int, semesters: int) -> Dict:
+def plan_semesters_detailed(
+    courses: List[Dict],
+    completed: Set[str],
+    max_credits: int,
+    semesters: int,
+    include_completed: bool = False,
+) -> Dict:
     """Greedy semester planner returning full detail.
+
+    Parameters:
+      courses: list of course dicts (keys: code, name, credits, prereqs)
+      completed: set of course codes already completed
+      max_credits: maximum credits allowed in any single semester
+      semesters: number of semesters available
+      include_completed: if True, schedules all courses, ignoring completion status
 
     Returns a dict:
       status: 'complete' | 'partial' | 'infeasible'
@@ -28,11 +41,16 @@ def plan_semesters_detailed(courses: List[Dict], completed: Set[str], max_credit
       plan: list of semesters, each a list of course codes
       unscheduled: {code: reason} for courses that could not be placed
 
-    The heuristic places courses in catalogue order, semester by semester,
-    and only once every prerequisite is completed or scheduled in an EARLIER
-    semester. It does not prove the plan uses the fewest semesters.
+    Algorithm notes:
+    The planner uses a greedy priority heuristic with topological ordering.
+    Courses are placed semester by semester only after every prerequisite is
+    completed or scheduled in a strictly EARLIER semester, and while remaining
+    within the semester credit limit. While highly effective, this greedy approach
+    is an approximation heuristic and does not guarantee a mathematically minimal
+    number of semesters.
     """
-    remaining = [c for c in courses if c['code'] not in completed]
+    effective_completed = set() if include_completed else set(completed)
+    remaining = courses if include_completed else [c for c in courses if c['code'] not in completed]
 
     try:
         topological_sort(courses)  # rejects circular prerequisites
@@ -54,7 +72,7 @@ def plan_semesters_detailed(courses: List[Dict], completed: Set[str], max_credit
     sem_of: Dict[str, int] = {}
 
     def ready(code: str, sem: int) -> bool:
-        return all(p in completed or (p in sem_of and sem_of[p] < sem) for p in prereq_map[code])
+        return all(p in effective_completed or (p in sem_of and sem_of[p] < sem) for p in prereq_map[code])
 
     for s in range(semesters):
         for c in remaining:
@@ -71,23 +89,19 @@ def plan_semesters_detailed(courses: List[Dict], completed: Set[str], max_credit
         code = c['code']
         if code in sem_of:
             continue
-        blocked = [p for p in c['prereqs'] if p not in completed and p not in sem_of]
+        blocked = [p for p in c['prereqs'] if p not in effective_completed and p not in sem_of]
         if blocked:
             unscheduled[code] = "Waiting on prerequisite(s) that are not scheduled: " + ", ".join(blocked)
             continue
         scheduled_pre = [sem_of[p] for p in c['prereqs'] if p in sem_of]
-        if scheduled_pre:
-            earliest = max(scheduled_pre) + 1
-            if earliest >= semesters:
-                unscheduled[code] = (
-                    f"Its prerequisites finish in semester {earliest}, "
-                    f"so it needs semester {earliest + 1} or later."
-                )
+        earliest = max(scheduled_pre) + 1 if scheduled_pre else 0
+        if earliest >= semesters:
+            if not scheduled_pre:
+                unscheduled[code] = "No remaining credit capacity in any available semester."
             else:
-                unscheduled[code] = "No remaining credit capacity in the semesters where it was eligible."
+                unscheduled[code] = f"Its prerequisites finish in semester {earliest}, so it needs semester {earliest + 1} or later."
         else:
-            # No prerequisites at all (or all already completed): ran out of capacity
-            unscheduled[code] = "No remaining credit capacity in any available semester."
+            unscheduled[code] = "No remaining credit capacity in the semesters where it was eligible."
 
     if unscheduled:
         message = (f"Unable to schedule courses: {', '.join(unscheduled)} "
@@ -96,9 +110,9 @@ def plan_semesters_detailed(courses: List[Dict], completed: Set[str], max_credit
     return {"status": "complete", "message": "", "plan": plan, "unscheduled": {}}
 
 
-def plan_semesters(courses: List[Dict], completed: Set[str], max_credits: int, semesters: int):
+def plan_semesters(courses: List[Dict], completed: Set[str], max_credits: int, semesters: int, include_completed: bool = False):
     """Greedy semester planner.
     Returns a list of semesters, each a list of course codes, or an error string.
     """
-    result = plan_semesters_detailed(courses, completed, max_credits, semesters)
+    result = plan_semesters_detailed(courses, completed, max_credits, semesters, include_completed=include_completed)
     return result["plan"] if result["status"] == "complete" else result["message"]

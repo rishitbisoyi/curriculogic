@@ -3,10 +3,10 @@ gatherUsageStats = false
 
 [theme]
 base = "light"
-primaryColor = "#0b7f71"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f6f8fb"
-textColor = "#0b1f3a"
+primaryColor = "#0F9690"
+backgroundColor = "#F5F7FB"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#172033"
 font = "sans serif"
 
 [server]
