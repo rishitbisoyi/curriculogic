@@ -1,5 +1,7 @@
-import networkx as nx
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import networkx as nx
 from typing import List, Dict, Set, Tuple, Optional
 
 COLOR_COMPLETED = "#15803d"  # green
@@ -144,12 +146,3 @@ def make_figure(G: nx.DiGraph, completed: Set[str], eligible: List[Dict],
     return fig
 
 
-def draw_graph(G: nx.DiGraph, completed: Set[str], eligible: List[Dict],
-               hasse: bool = False, compact: bool = False):
-    import streamlit as st  # lazy import: only needed for rendering
-    if G.number_of_nodes() == 0:
-        st.info("No courses to display.")
-        return
-    fig = make_figure(G, completed, eligible, hasse=hasse, compact=compact)
-    st.pyplot(fig)
-    plt.close(fig)

@@ -2,127 +2,60 @@
 
 > **Plan smarter. Understand the mathematics.**
 
-A polished academic dashboard for visualizing course prerequisites, checking eligibility,
-planning semesters, and exploring the discrete-mathematics concepts behind it all.
+A polished academic dashboard for visualizing course prerequisites, checking eligibility, planning semesters, and exploring the discrete-mathematics concepts behind it all.
 
 Built for **BAMAT205 — Discrete Mathematics and Linear Algebra**.
 
 ---
 
-## Quick Start
+## Quick Start (React 19 + TypeScript + FastAPI)
 
-### 1. Modern Web Application (React 19 + TypeScript + FastAPI) — *Recommended*
-
-The modern frontend provides a premium academic SaaS interface with interactive topological graph exploration, instant real-time filtering, modal editors, and discrete math simulation labs.
+### 1. Install Dependencies
 
 ```bash
-# 1. Install backend & frontend dependencies
+# Install backend Python dependencies
 pip install -r requirements.txt
+
+# Install frontend Node dependencies
 cd frontend && npm install && cd ..
+```
 
-# 2. Start the FastAPI backend service
-python3 -m uvicorn server:app --host 0.0.0.0 --port 8000
+### 2. Run the Application
 
-# 3. In another terminal, start the Vite dev server
+#### Option A: Development Mode (Hot Reloading)
+
+Run backend and frontend concurrently:
+
+```bash
+# Terminal 1: FastAPI Backend
+python3 -m uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+
+# Terminal 2: React Frontend (Vite)
 cd frontend
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-Open **http://localhost:5173** in your browser.
+- **Frontend App**: [http://localhost:5173](http://localhost:5173)
+- **API Documentation (Swagger UI)**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
----
+#### Option B: Production Single-Server Mode
 
-### 2. Classic Streamlit Dashboard
-
-The legacy single-script Streamlit application is fully preserved and runs alongside:
+Build the frontend bundle and serve everything directly from FastAPI:
 
 ```bash
-pip install -r requirements.txt
-streamlit run app.py --server.port 8501
+cd frontend && npm run build && cd ..
+python3 -m uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
-Open **http://localhost:8501** in your browser.
+Open **http://localhost:8000** in your browser.
 
 ---
 
 ## Access from Another Device on the Same Network
 
-### 1. Start with network access
-
-```bash
-streamlit run app.py --server.address 0.0.0.0 --server.port 8501
-```
-
-### 2. Find your laptop's private IPv4 address
-
-**Linux / macOS:**
-
-```bash
-ip addr show | grep "inet "
-# or
-hostname -I
-```
-
-**Windows (PowerShell):**
-
-```powershell
-Get-NetIPAddress -AddressFamily IPv4 | Select IPAddress
-```
-
-Look for the address on your Wi-Fi/Ethernet interface (e.g. `192.168.1.42`).
-
-### 3. Open from the other device
-
-On a phone, tablet, or another laptop connected to the **same Wi-Fi network**, open:
-
-```
-http://<YOUR_LAPTOP_IP>:8501
-```
-
-Replace `<YOUR_LAPTOP_IP>` with the address from step 2.
-
-### 4. Troubleshooting
-
-| Issue | Fix |
-|-------|-----|
-| **Firewall blocks port 8501** | Allow inbound TCP on port 8501 (`sudo ufw allow 8501` on Ubuntu, or add a Windows Firewall rule). |
-| **"Connection refused" on the other device** | Verify both devices are on the same network and that you used `--server.address 0.0.0.0`. |
-| **AP Isolation / Client Isolation** | Some routers block device-to-device traffic. Check your router settings or try a different network. |
-| **Port already in use** | Change the port: `--server.port 8502` |
-
-### 5. Stop the server
-
-Press **Ctrl + C** in the terminal where Streamlit is running.
-
----
-
-## Deployment on Streamlit Community Cloud (Free)
-
-### Preparation checklist
-
-- [x] `requirements.txt` lists all dependencies.
-- [x] No absolute file paths — all paths are relative to the project root.
-- [x] Sample data is embedded in `sample_data.py`; no external files required.
-- [x] No API keys, tokens, or passwords in the codebase.
-- [x] `.streamlit/config.toml` sets `headless = true`.
-
-### Steps
-
-1. Push this repository to **GitHub** (public or private).
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
-3. Click **"New app"** and select your repository.
-4. Set the **main file path** to: `curriculogic/app.py`
-   *(adjust if your repo root differs)*
-5. Click **Deploy**.
-
-Your app will be available at a public HTTPS URL like:
-`https://<your-app-name>.streamlit.app`
-
-### Limitations of Streamlit Community Cloud
-
-- **No persistent storage**: `courses.json` is written to the container filesystem and will be reset on each reboot. Session state persists only for the duration of a browser session.
-- **Resource limits**: Free tier has limited CPU/RAM; sufficient for this app.
-- **Sleep after inactivity**: The app may sleep after ~7 days of no traffic and will wake on next visit.
+1. Find your machine's private IPv4 address (`hostname -I` or `ip addr show`).
+2. Start the Vite server with `--host 0.0.0.0`.
+3. Open `http://<YOUR_IP>:5173` from any phone, tablet, or laptop on the same Wi-Fi network.
 
 ---
 
@@ -130,23 +63,29 @@ Your app will be available at a public HTTPS URL like:
 
 ```
 curriculogic/
-├── .streamlit/
-│   └── config.toml          # Streamlit theme & server config
-├── app.py                   # Main Streamlit application (entry point & page router)
-├── ui.py                    # Accessible UI component library & CSS injection
-├── logic.py                 # Propositional logic & dashboard metrics calculation
-├── graph_engine.py          # NetworkX DAG building, Hasse reduction, cycle detection, drawing
+├── server.py                # FastAPI REST backend & static SPA host
+├── graph_engine.py          # NetworkX DAG building, Hasse reduction, cycle detection
 ├── planner.py               # Greedy credit-constrained semester planner with topological sort
+├── logic.py                 # Propositional logic & dashboard metrics calculation
 ├── counting.py              # Combinations, permutations, & pigeonhole feasibility checks
 ├── sample_data.py           # Sample course data & JSON persistence
-├── style.css                # Navy & teal design system stylesheet
 ├── courses.json             # Persistent course storage
-├── requirements.txt         # Python dependencies
-├── __init__.py              # Package init
-└── tests/
-    ├── __init__.py
-    ├── test_logic.py        # Logic metrics tests
-    └── test_curriculogic.py # Comprehensive functional and integration tests
+├── requirements.txt         # Python backend dependencies
+├── frontend/                # Modern React 19 + TypeScript + Vite web app
+│   ├── src/
+│   │   ├── App.tsx          # Main application router and state
+│   │   ├── components/      # UI components (Graph, Modal, Matrix, Math Labs)
+│   │   ├── types.ts         # TypeScript data definitions
+│   │   └── index.css        # Premium design system stylesheet
+│   ├── package.json
+│   └── vite.config.ts
+└── tests/                   # Automated pytest suite
+    ├── test_counting.py
+    ├── test_curriculogic.py
+    ├── test_graph_engine.py
+    ├── test_logic.py
+    ├── test_planner.py
+    └── test_sample_data.py
 ```
 
 ## Running Tests
@@ -161,20 +100,19 @@ pytest -v
 
 ## Mathematical Concepts
 
-1. **Propositional Logic** — AND-conjunction of prerequisites determines eligibility.
-2. **Counting** — Pigeonhole principle for feasibility checks; combinations calculator.
-3. **Relations & Partial Orders** — Topological sorting of the prerequisite DAG; Hasse-diagram-style visualization.
+1. **Propositional Logic** — AND-conjunction of prerequisites determines eligibility ($\bigwedge_{p \in \mathrm{prereqs}(c)} \mathrm{done}(p)$).
+2. **Relations & Partial Orders** — Posets $(C, \le)$, Hasse diagrams (transitive reduction), and topological sorting for prerequisite DAGs.
+3. **Counting & Pigeonhole Principle** — Combinatorics calculation ($C(n, k)$, $P(n, k)$) and credit feasibility bounds ($\lceil R / s \rceil \le k$).
 
 ---
 
 ## Technologies
 
 | Component | Technology |
-|-----------|-----------|
-| Language | Python 3.11+ |
-| Web Framework | Streamlit |
-| Graph Algorithms | NetworkX |
-| Visualization | Matplotlib |
+|---|---|
+| Frontend | React 19, TypeScript, Lucide Icons, Canvas-Confetti, Vite |
+| Backend API | FastAPI, Uvicorn, Pydantic |
+| Graph Engine | NetworkX |
 | Testing | pytest |
 
 ---
