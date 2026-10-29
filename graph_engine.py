@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import streamlit as st
 from typing import List, Dict, Set, Tuple, Optional
 
 COLOR_COMPLETED = "#0b7f71"
@@ -143,6 +142,7 @@ def make_figure(G: nx.DiGraph, completed: Set[str], eligible: List[Dict],
 
 def draw_graph(G: nx.DiGraph, completed: Set[str], eligible: List[Dict],
                hasse: bool = False, compact: bool = False):
+    import streamlit as st  # lazy import: only needed for rendering
     if G.number_of_nodes() == 0:
         st.info("No courses to display.")
         return

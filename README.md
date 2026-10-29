@@ -137,7 +137,10 @@ curriculogic/
 ## Running Tests
 
 ```bash
-cd /path/to/maths
+# From within the repository root:
+python -m pytest tests/ -v
+
+# Or from the parent directory:
 python -m pytest curriculogic/tests/ -v
 ```
 

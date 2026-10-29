@@ -1,6 +1,7 @@
 import json
 from typing import List, Dict
 import os
+import tempfile
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), 'courses.json')
 
@@ -23,7 +24,7 @@ def load_sample_courses() -> List[Dict]:
     """
     if os.path.exists(DATA_FILE):
         try:
-            with open(DATA_FILE, 'r') as f:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception:
             # If file is corrupted, fallback to sample
@@ -33,7 +34,15 @@ def load_sample_courses() -> List[Dict]:
     return SAMPLE_COURSES.copy()
 
 def save_courses(courses: List[Dict]):
-    """Save the given list of courses to the JSON file.
+    """Save the given list of courses to the JSON file reliably using an atomic write.
     """
-    with open(DATA_FILE, 'w') as f:
-        json.dump(courses, f, indent=2)
+    dir_name = os.path.dirname(DATA_FILE)
+    fd, temp_path = tempfile.mkstemp(dir=dir_name, prefix='courses_', suffix='.tmp')
+    try:
+        with open(fd, 'w', encoding='utf-8') as f:
+            json.dump(courses, f, indent=2)
+        os.replace(temp_path, DATA_FILE)
+    except Exception:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        raise

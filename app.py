@@ -165,7 +165,7 @@ def course_form(target):
             code = c1.text_input("Course code", value=existing["code"] if is_edit else "",
                                  disabled=is_edit, max_chars=10, placeholder="e.g. CS101")
             name = c2.text_input("Course name", value=existing["name"] if is_edit else "",
-                                 placeholder="e.g. Data Structures")
+                                 max_chars=100, placeholder="e.g. Data Structures")
             credits = c3.number_input("Credits", min_value=1, max_value=10, step=1,
                                       value=int(existing["credits"]) if is_edit else 3)
             options = [c["code"] for c in courses if not (is_edit and c["code"] == existing["code"])]

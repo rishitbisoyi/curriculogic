@@ -76,11 +76,18 @@ def plan_semesters_detailed(courses: List[Dict], completed: Set[str], max_credit
             unscheduled[code] = "Waiting on prerequisite(s) that are not scheduled: " + ", ".join(blocked)
             continue
         scheduled_pre = [sem_of[p] for p in c['prereqs'] if p in sem_of]
-        earliest = max(scheduled_pre) + 1 if scheduled_pre else 0
-        if earliest >= semesters:
-            unscheduled[code] = f"Its prerequisites finish in semester {earliest}, so it needs semester {earliest + 1} or later."
+        if scheduled_pre:
+            earliest = max(scheduled_pre) + 1
+            if earliest >= semesters:
+                unscheduled[code] = (
+                    f"Its prerequisites finish in semester {earliest}, "
+                    f"so it needs semester {earliest + 1} or later."
+                )
+            else:
+                unscheduled[code] = "No remaining credit capacity in the semesters where it was eligible."
         else:
-            unscheduled[code] = "No remaining credit capacity in the semesters where it was eligible."
+            # No prerequisites at all (or all already completed): ran out of capacity
+            unscheduled[code] = "No remaining credit capacity in any available semester."
 
     if unscheduled:
         message = (f"Unable to schedule courses: {', '.join(unscheduled)} "

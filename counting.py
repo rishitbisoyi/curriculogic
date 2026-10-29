@@ -32,7 +32,7 @@ def credit_capacity_check(required_credits: int, max_credits: int, semesters: in
 def combinations(n: int, k: int) -> int:
     """Return C(n, k) using math.comb, with validation."""
     if k < 0 or n < 0:
-        raise ValueError('n and k must be non‑negative')
+        raise ValueError('n and k must be non-negative')
     if k > n:
         return 0
     return comb(n, k)
@@ -41,7 +41,7 @@ def combinations(n: int, k: int) -> int:
 def permutations(n: int, k: int) -> int:
     """Return P(n, k) = n! / (n-k)! using math.perm, with validation."""
     if k < 0 or n < 0:
-        raise ValueError('n and k must be non‑negative')
+        raise ValueError('n and k must be non-negative')
     if k > n:
         return 0
     return perm(n, k)
